@@ -24,7 +24,7 @@ from gi.repository import Gtk
 # connect sqlite
 conn = sqlite3.connect('database.db')
 cursor = conn.cursor()
-# i know that imma retarded a bit, it's ok
+# newer do like that. i'll fix this later
 b0 = 0
 b1 = 0
 b2 = 0
@@ -565,25 +565,6 @@ class TxtFile:
 				mail_file.write(message)
 			mail_file.close()
 	make_txt_file(SelectTable.countRows())
-
-class MessageDialogWindow(Gtk.Window):
-	def __init__(self):
-		Gtk.Window.__init__(self, title="MessageDialog Example")
-
-		dialog = Gtk.MessageDialog(
-			transient_for=self,
-			flags=0,
-			message_type=Gtk.MessageType.INFO,
-			buttons=Gtk.ButtonsType.OK,
-			text="This is an INFO MessageDialog",
-		)
-		dialog.format_secondary_text(
-			"And this is the secondary text that explains things."
-		)
-		dialog.run()
-		print("INFO dialog closed")
-
-		dialog.destroy()
 
 class SendMail:
 	# get month name to subject of mail
