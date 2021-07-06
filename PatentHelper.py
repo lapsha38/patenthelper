@@ -35,11 +35,14 @@ class Application(object):
 		self.builder.add_from_file(self.glade_file)
 		self.window = self.builder.get_object('main')
 		# add entry
+		self.number = self.builder.get_object('certNum')
 		self.chose = self.builder.get_object('type_chose')
 		self.holder = self.builder.get_object('rightHolder')
 		self.name = self.builder.get_object('name')
 		self.date = self.builder.get_object('date')
 		self.date_chose = self.builder.get_object('date_chose')
+		self.email = self.builder.get_object('email')
+		self.note = self.builder.get_object('note')
 		# buttons
 		self.add_button = self.builder.get_object("add")
 		self.change_button = self.builder.get_object("change")
@@ -59,9 +62,6 @@ class Application(object):
 	# calculate time to remind
 	def calc_time(self, *args):
 		# deps
-		self.chose = self.builder.get_object('type_chose')
-		self.date_chose = self.builder.get_object('date_chose')
-		self.date = self.builder.get_object('date')
 		select = self.builder.get_object("TreeView").get_selection()
 		model, treeiter = select.get_selected()
 
@@ -74,8 +74,8 @@ class Application(object):
 		inv_start = value_date + relativedelta(years=1)
 		inv_end = value_date + relativedelta(years=2)
 		# um
-		um_start = value_date + relativedelta(months=6)
-		um_end = value_date + relativedelta(months=11)
+		um_start = value_date + relativedelta(months=0)
+		um_end = value_date + relativedelta(months=12)
 		# id
 		if value_date < date(2015, 1, 1):
 			id_start = value_date + relativedelta(years=9)
@@ -104,7 +104,8 @@ class Application(object):
 		if self.date_chose.get_active() == 1 and self.chose.get_active() == 3 and value_date < date(2015, 1, 1):
 			remind_date = value_date + relativedelta(years=4)
 			remind_date2 = value_date + relativedelta(years=5)
-
+		if self.date.chose.get_active() == 1 and  self.chose.get_active() == 3:
+			remind_date = remind_date + relativedelta(days=1)
 		# calc year
 		remind_date_str = (date.strftime(remind_date, "%Y"))
 		remind_date_str2 = (date.strftime(remind_date2, "%Y"))
@@ -307,36 +308,41 @@ class Application(object):
 		if count_search == 0:
 			for row in cursor.execute("SELECT * FROM patents ORDER by %s DESC" % (sort_column,)):
 				self.liststore.append([row[0], row[1], row[2], row[3], row[4], 
-						       row[5], row[6], row[7], row[8], row[9], row[10]])
+							   row[5], row[6], row[7], row[8], row[9], row[10]])
 				count_search = 1
 		else:
 			for row in cursor.execute("SELECT * FROM patents ORDER by %s ASC" % (sort_column,)):
 				self.liststore.append([row[0], row[1], row[2], row[3], row[4], 
-						       row[5], row[6], row[7], row[8], row[9], row[10]])
+							   row[5], row[6], row[7], row[8], row[9], row[10]])
 				count_search = 0	
 		cursor.close()
 
 	# del button connect
 	def click_del(self, delete):
 		cursor = conn.cursor()
-		self.date_chose = self.builder.get_object('date_chose')
+		# self.date_chose = self.builder.get_object('date_chose')
 		# get id for selected row
 		select = self.builder.get_object("TreeView").get_selection()
+
 		model, treeiter = select.get_selected()
 		i = (model[treeiter][0])
+
 		# del row from db
 		if treeiter is not None:
 			sql_delete_query = """DELETE from patents where id = ?"""
 		cursor.execute(sql_delete_query, ((model[treeiter][0]),))
-		# set right id to rows after delete
+		# set right id to rows in db after delete
 		cursor.execute("UPDATE patents SET id = id - 1 WHERE id > '%s'" % i)
 		conn.commit()
 		id_for_change = self.liststore.get_value(treeiter, 0)
+		# remove from gui
 		self.liststore.remove(treeiter)
-		# refresh list after delete
-		self.liststore.clear()
-		for row in cursor.execute("select * from patents"):
-			self.liststore.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]])
+		self.liststore.set_value(treeiter, 0, i)
+		# set id right numbers
+		while i < len(self.liststore):
+			self.liststore.set_value(self.liststore.iter_next(treeiter), 0, i + 1)
+			i+=1
+			treeiter = self.liststore.iter_next(treeiter)
 		cursor.close()
 
 	# destroy button with sql connect close
@@ -460,8 +466,6 @@ class SendMail:
 			print('error')
 
 	send_email(month_name(), read_config()[0], read_config()[1], read_config()[2])
-
-
 
 if __name__ == '__main__':
 	SendMail()
