@@ -151,15 +151,6 @@ class Application(object):
 	# add button
 	def click_add(self, add):
 		cursor = conn.cursor()
-		# input variables from __init__
-		self.chose = self.builder.get_object('type_chose')
-		self.number = self.builder.get_object('certNum')
-		self.holder = self.builder.get_object('rightHolder')
-		self.name = self.builder.get_object('name')
-		self.date_chose = self.builder.get_object('date_chose')
-		self.date = self.builder.get_object('date')
-		self.email = self.builder.get_object('email')
-		self.note = self.builder.get_object('note')
 		# time calc
 		calc_time = self.calc_time()
 		# get column count to set id
@@ -255,13 +246,6 @@ class Application(object):
 	# get values from table
 	def on_clicked(self, clicked):
 		select = self.builder.get_object("TreeView").get_selection()
-		self.number = self.builder.get_object('certNum')
-		self.holder = self.builder.get_object('rightHolder')
-		self.name = self.builder.get_object('name')
-		self.date_chose = self.builder.get_object('date_chose')
-		self.date = self.builder.get_object('date')
-		self.email = self.builder.get_object('email')
-		self.note = self.builder.get_object('note')
 		model, treeiter = select.get_selected()
 		# set data to entrys
 		i1 = (model[treeiter][1])
@@ -320,10 +304,8 @@ class Application(object):
 	# del button connect
 	def click_del(self, delete):
 		cursor = conn.cursor()
-		# self.date_chose = self.builder.get_object('date_chose')
 		# get id for selected row
 		select = self.builder.get_object("TreeView").get_selection()
-
 		model, treeiter = select.get_selected()
 		i = (model[treeiter][0])
 
