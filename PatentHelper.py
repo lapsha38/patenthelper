@@ -24,18 +24,8 @@ from gi.repository import Gtk
 # connect sqlite
 conn = sqlite3.connect('database.db')
 cursor = conn.cursor()
-# newer do like that. i'll fix this later
-b0 = 0
-b1 = 0
-b2 = 0
-b3 = 0
-b4 = 0
-b5 = 0
-b6 = 0
-b7 = 0
-b8 = 0
-b9 = 0
-b10 = 0
+# i'll fot it later
+count_search = 0
 
 class Application(object):
 	def __init__(self):
@@ -304,170 +294,26 @@ class Application(object):
 			self.note.set_text(str(model[treeiter][10]))
 
 
-	def on_search(self, search):
-		global b0
-		select = self.builder.get_object("TreeView").get_selection()
-		model, treeiter = select.get_selected()
-		self.liststore.clear()
+	def on_search(self, on_search):
 		cursor = conn.cursor()
-		if b0 % 2 == 0:
-			for row in cursor.execute("SELECT * FROM patents ORDER by id DESC"):
-				self.liststore.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]])
-			b0 += 1
-		else:
-			for row in cursor.execute("SELECT * FROM patents ORDER by id ASC"):
-				self.liststore.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]])    
-			b0 -= 1
-		cursor.close()
-	def on_search1(self, search):
-		global b1
-		select = self.builder.get_object("TreeView").get_selection()
-		model, treeiter = select.get_selected()
+		focus_column = on_search.get_title()
+		count_dict = {'№': 'id', 'Тип': 'type', 'Номер': 'numCert', 'Название': 'name', 
+		'Правообладатель': 'rightholder', 'Дата приоритета': 'priorityDate_ISO', 
+		'Оплатить с': 'dateISO', 'Оплатить по': 'dateEND', 'Дата оплаты': 'payDate_ISO', 
+		'email': 'email', 'Примечание': 'note'}
+		sort_column = count_dict.get(focus_column)
 		self.liststore.clear()
-		cursor = conn.cursor()
-		if b1 % 2 == 0:
-			for row in cursor.execute("SELECT * FROM patents ORDER by type DESC"):
-				self.liststore.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]])
-			b1 += 1
+		global count_search
+		if count_search == 0:
+			for row in cursor.execute("SELECT * FROM patents ORDER by %s DESC" % (sort_column,)):
+				self.liststore.append([row[0], row[1], row[2], row[3], row[4], 
+						       row[5], row[6], row[7], row[8], row[9], row[10]])
+				count_search = 1
 		else:
-			for row in cursor.execute("SELECT * FROM patents ORDER by type ASC"):
-				self.liststore.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]])    
-			b1 -= 1
-		cursor.close()
-	def on_search2(self, search):
-		global b2
-		select = self.builder.get_object("TreeView").get_selection()
-		model, treeiter = select.get_selected()
-		self.liststore.clear()
-		cursor = conn.cursor()
-		if b2 % 2 == 0:
-			for row in cursor.execute("SELECT * FROM patents ORDER by numCert DESC"):
-				self.liststore.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]])
-			b2 += 1
-		else:
-			for row in cursor.execute("SELECT * FROM patents ORDER by numCert ASC"):
-				self.liststore.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]])    
-			b2 -= 1
-		cursor.close()
-	def on_search3(self, search):
-		global b3
-		select = self.builder.get_object("TreeView").get_selection()
-		model, treeiter = select.get_selected()
-		self.liststore.clear()
-		cursor = conn.cursor()
-		if b3 % 2 == 0:
-			for row in cursor.execute("SELECT * FROM patents ORDER by name DESC"):
-				self.liststore.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]])
-			b3 += 1
-		else:
-			for row in cursor.execute("SELECT * FROM patents ORDER by name ASC"):
-				self.liststore.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]])    
-			b3 -= 1
-		cursor.close()
-	def on_search4(self, search):
-		global b4
-		select = self.builder.get_object("TreeView").get_selection()
-		model, treeiter = select.get_selected()
-		self.liststore.clear()
-		cursor = conn.cursor()
-		if b4 % 2 == 0:
-			for row in cursor.execute("SELECT * FROM patents ORDER by rightholder DESC"):
-				self.liststore.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]])
-			b4 += 1
-		else:
-			for row in cursor.execute("SELECT * FROM patents ORDER by rightholder ASC"):
-				self.liststore.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]])    
-			b4 -= 1
-		cursor.close()
-	def on_search5(self, search):
-		global b5
-		select = self.builder.get_object("TreeView").get_selection()
-		model, treeiter = select.get_selected()
-		self.liststore.clear()
-		cursor = conn.cursor()
-		if b5 % 2 == 0:
-			for row in cursor.execute("SELECT * FROM patents ORDER by priorityDate_ISO DESC"):
-				self.liststore.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]])
-			b5 += 1
-		else:
-			for row in cursor.execute("SELECT * FROM patents ORDER by priorityDate_ISO ASC"):
-				self.liststore.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]])    
-			b5 -= 1
-		cursor.close()
-	def on_search6(self, search):
-		global b6
-		select = self.builder.get_object("TreeView").get_selection()
-		model, treeiter = select.get_selected()
-		self.liststore.clear()
-		cursor = conn.cursor()
-		if b6 % 2 == 0:
-			for row in cursor.execute("SELECT * FROM patents ORDER by dateISO DESC"):
-				self.liststore.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]])
-			b6 += 1
-		else:
-			for row in cursor.execute("SELECT * FROM patents ORDER by dateISO ASC"):
-				self.liststore.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]])    
-			b6 -= 1
-		cursor.close()
-	def on_search7(self, search):
-		global b7
-		select = self.builder.get_object("TreeView").get_selection()
-		model, treeiter = select.get_selected()
-		self.liststore.clear()
-		cursor = conn.cursor()
-		if b7 % 2 == 0:
-			for row in cursor.execute("SELECT * FROM patents ORDER by dateEND DESC"):
-				self.liststore.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]])
-			b7 += 1
-		else:
-			for row in cursor.execute("SELECT * FROM patents ORDER by dateEND ASC"):
-				self.liststore.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]])    
-			b7 -= 1
-		cursor.close()
-	def on_search8(self, search):
-		global b8
-		select = self.builder.get_object("TreeView").get_selection()
-		model, treeiter = select.get_selected()
-		self.liststore.clear()
-		cursor = conn.cursor()
-		if b8 % 2 == 0:
-			for row in cursor.execute("SELECT * FROM patents ORDER by payDate_ISO DESC"):
-				self.liststore.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]])
-			b8 += 1
-		else:
-			for row in cursor.execute("SELECT * FROM patents ORDER by payDate_ISO ASC"):
-				self.liststore.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]])    
-			b8 -= 1
-		cursor.close()
-	def on_search9(self, search):
-		global b9
-		select = self.builder.get_object("TreeView").get_selection()
-		model, treeiter = select.get_selected()
-		self.liststore.clear()
-		cursor = conn.cursor()
-		if b9 % 2 == 0:
-			for row in cursor.execute("SELECT * FROM patents ORDER by email DESC"):
-				self.liststore.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]])
-			b9 += 1
-		else:
-			for row in cursor.execute("SELECT * FROM patents ORDER by email ASC"):
-				self.liststore.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]])    
-			b9 -= 1
-		cursor.close()
-	def on_search10(self, search):
-		global b10
-		select = self.builder.get_object("TreeView").get_selection()
-		model, treeiter = select.get_selected()
-		self.liststore.clear()
-		cursor = conn.cursor()
-		if b10 % 2 == 0:
-			for row in cursor.execute("SELECT * FROM patents ORDER by note DESC"):
-				self.liststore.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]])
-			b10 += 1
-		else:
-			for row in cursor.execute("SELECT * FROM patents ORDER by note ASC"):
-				self.liststore.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]])    
-			b10 -= 1
+			for row in cursor.execute("SELECT * FROM patents ORDER by %s ASC" % (sort_column,)):
+				self.liststore.append([row[0], row[1], row[2], row[3], row[4], 
+						       row[5], row[6], row[7], row[8], row[9], row[10]])
+				count_search = 0	
 		cursor.close()
 
 	# del button connect
