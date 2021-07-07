@@ -18,13 +18,14 @@ from email.mime.text import MIMEText
 
 
 gi.require_version('Gtk', '3.0')
-# gi.require_version('Gtk', '4')
+# todo: switch to gtk4
+#gi.require_version('Gtk', '4.0')
 from gi.repository import Gtk
 
 # connect sqlite
 conn = sqlite3.connect('database.db')
 cursor = conn.cursor()
-# i'll fot it later
+# value for sort tables
 count_search = 0
 
 class Application(object):
@@ -64,19 +65,18 @@ class Application(object):
 		# deps
 		select = self.builder.get_object("TreeView").get_selection()
 		model, treeiter = select.get_selected()
-
 		## start calc
 		value_date = (datetime.strptime((self.date.get_text()), ("%d.%m.%Y")).date())
-		# tm
+		# trade mark time calk
 		tm_start = value_date + relativedelta(years=9)
 		tm_end = value_date + relativedelta(years=10)
-		# inv
+		# invention time calk
 		inv_start = value_date + relativedelta(years=1)
 		inv_end = value_date + relativedelta(years=2)
-		# um
+		# utility model time calk
 		um_start = value_date + relativedelta(months=0)
 		um_end = value_date + relativedelta(months=12)
-		# id
+		# industrial design time calk
 		if value_date < date(2015, 1, 1):
 			id_start = value_date + relativedelta(years=9)
 			id_end = value_date + relativedelta(years=10)
@@ -93,7 +93,7 @@ class Application(object):
 		elif self.chose.get_active() == 3:
 			date_start, date_end = [id_start, id_end]
 
-		# add years. needs to calc pay day next time
+		# add years, needs to calc pay day next time
 		remind_date = value_date + relativedelta(years=1)
 		remind_date2 = value_date + relativedelta(years=2)
 
@@ -278,7 +278,7 @@ class Application(object):
 		else:
 			self.note.set_text(str(model[treeiter][10]))
 
-
+	# sort table values
 	def on_search(self, on_search):
 		cursor = conn.cursor()
 		focus_column = on_search.get_title()
@@ -306,6 +306,7 @@ class Application(object):
 		cursor = conn.cursor()
 		# get id for selected row
 		select = self.builder.get_object("TreeView").get_selection()
+
 		model, treeiter = select.get_selected()
 		i = (model[treeiter][0])
 
@@ -332,9 +333,24 @@ class Application(object):
 		Gtk.main_quit()
 		conn.close()
 
+       
+class MessageDialogWindow(Gtk.Window):
+	# create error window (if something goes wrong)
+	def error_window(error_title, error_text):
+		Gtk.Window(title="Error!")
+		dialog = Gtk.MessageDialog(
+			flags=0,
+			message_type=Gtk.MessageType.INFO,
+			buttons=Gtk.ButtonsType.OK,
+			text=error_title,
+		)
+		dialog.format_secondary_text(
+			error_text
+		)
+		dialog.run()
+		dialog.destroy()
 
-class SelectTable:
-	@staticmethod
+class SendMail:
 	# select table from db
 	def sql_select_to_list(num, select_table):
 		cursor = conn.cursor()
@@ -364,7 +380,7 @@ class SelectTable:
 			len_list = cursor.fetchone()
 			cursor.close()
 			return len_list[0]
-
+	# mark sended items
 	def setSended():
 		cursor = conn.cursor()
 		cursor.execute("UPDATE patents SET sended = sended + 1 WHERE sended < 6 AND nextRemind < date('now')")
@@ -374,33 +390,6 @@ class SelectTable:
 		cursor.close()
 
 	next_remind()
-
-class TxtFile:
-	def make_txt_file(len_list):
-		# if list is not null, make some text file
-		if len_list != 0:
-			# fill list for remind
-			mail_file = open("LastMail.txt", "w")
-			for num in range(len_list):
-				message = (str(num + 1) + '. ' + str(
-					SelectTable.sql_select_to_list(num, 'type')) + '; Наименование: ' + str(
-					SelectTable.sql_select_to_list(num, 'name')) + '; Правообладатель: ' + str(
-					SelectTable.sql_select_to_list(num, 'rightholder')) + '; Номер: ' + str(
-					SelectTable.sql_select_to_list(num, 'numCert')) + '; Дата приоритета: ' + str(
-					SelectTable.sql_select_to_list(num, 'priorityDate')) + '; Дата последнего платежа: ' + str(
-					SelectTable.sql_select_to_list(num, 'payDate')) + '; Оплатить с: ' + str(
-					SelectTable.sql_select_to_list(num, 'pdUpdateStart')) + '; Оплатить по: ' + str(
-					SelectTable.sql_select_to_list(num, 'pdUpdateEnd')) 
-					# + '; Отправить на почту: ' + str(
-					#SelectTable.sql_select_to_list(num, 'email')) + '; Примечание: ' + str(
-					#SelectTable.sql_select_to_list(num, 'note'))
-					+ '\n')
-
-				mail_file.write(message)
-			mail_file.close()
-	make_txt_file(SelectTable.countRows())
-
-class SendMail:
 	# get month name to subject of mail
 	def month_name():
 		#set russian locale
@@ -411,15 +400,21 @@ class SendMail:
 	def read_config():
 		# read configs from settings.ini
 		config = configparser.ConfigParser()
-		config.read("settings.ini")
-		# from
-		message_from = config["Mail"]["from"]
-		# pass
-		password = config["Mail"]["password"]
-		# to
-		message_to = config["Mail"]["to"]
-		return(message_from, password, message_to)
+		try:
+			config.read("settings.ini")
+			# from
+			message_from = config["Mail"]["from"]
+			# pass
+			password = config["Mail"]["password"]
+			# to
+			message_to = config["Mail"]["to"]
+			return(message_from, password, message_to)
+		except:
+			# if somethong goes wrong, type info about error
+			error_title = 'Config error'
+			MessageDialogWindow.error_window(error_title, str('Файл settings.ini не найден или заполнен некорректно'))
 
+	# sen email method
 	def send_email(month, message_from, password, message_to):
 		# Subject of the mail
 		subject = "Напоминание за %s" % (month)
@@ -432,9 +427,7 @@ class SendMail:
 		# read info from txt file and pass it to message
 		mail_file = open("LastMail.txt")
 		msg.attach(MIMEText(mail_file.read(), 'plain'))
-		# try to login gmail for sending the mail
-		win = MessageDialogWindow()
-		win.connect("destroy", Gtk.main_quit)
+		# try to login gmail and sending the mail
 		try:
 			server = smtplib.SMTP('smtp.gmail.com: 587')
 			server.starttls()
@@ -444,12 +437,40 @@ class SendMail:
 			mail_file.close()
 			# make a mark about sended objects
 			SelectTable.setSended()
-		except:
-			print('error')
+		except Exception as error_text:
+			# if somethong goes wrong, type info about error
+			error_title = 'Email error'
+			MessageDialogWindow.error_window(error_title, str(error_text))
 
 	send_email(month_name(), read_config()[0], read_config()[1], read_config()[2])
 
+# make txt file with info about subjects
+class TxtFile:
+	def make_txt_file(len_list):
+		# if list is not null, make some text file
+		if len_list != 0:
+			# fill list for remind
+			mail_file = open("LastMail.txt", "w")
+			for num in range(len_list):
+				message = (str(num + 1) + '. ' + str(
+					SendMail.sql_select_to_list(num, 'type')) + '; Наименование: ' + str(
+					SendMail.sql_select_to_list(num, 'name')) + '; Правообладатель: ' + str(
+					SendMail.sql_select_to_list(num, 'rightholder')) + '; Номер: ' + str(
+					SendMail.sql_select_to_list(num, 'numCert')) + '; Дата приоритета: ' + str(
+					SendMail.sql_select_to_list(num, 'priorityDate')) + '; Дата последнего платежа: ' + str(
+					SendMail.sql_select_to_list(num, 'payDate')) + '; Оплатить с: ' + str(
+					SendMail.sql_select_to_list(num, 'pdUpdateStart')) + '; Оплатить по: ' + str(
+					SendMail.sql_select_to_list(num, 'pdUpdateEnd')) 
+					## disabled now
+					# + '; Отправить на почту: ' + str(
+					#SendMail.sql_select_to_list(num, 'email')) + '; Примечание: ' + str(
+					#SendMail.sql_select_to_list(num, 'note'))
+					+ '\n')
+
+				mail_file.write(message)
+			mail_file.close()
+	make_txt_file(SendMail.countRows())
 if __name__ == '__main__':
-	SendMail()
 	Application()
 	Gtk.main()
+	SendMail()
