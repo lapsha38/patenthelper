@@ -3,6 +3,7 @@
 #
 # Copyright 2021 Andrey Golubev
 import locale
+import sys
 import configparser
 import gi
 import signal
@@ -124,28 +125,6 @@ class Application(object):
 			date_start_str = remind_day + remind_date_str
 			date_end_str = remind_day + remind_date_str2
 		return date_start_str, date_end_str
-
-	# add sql connect
-	def create_table(self, create_button):
-		cursor = conn.cursor()
-		# sql query (add table)
-		cursor.execute("""
-			CREATE TABLE IF NOT EXISTS patents(
-			"id"	INTEGER NOT NULL UNIQUE,
-			"type"	TEXT NOT NULL,
-			"numCert"	NUMERIC NOT NULL UNIQUE,
-			"name"	TEXT NOT NULL,
-			"rightholder"	TEXT NOT NULL,
-			"priorityDate"	TEXT NOT NULL,
-			"pdUpdateStart"	TEXT,
-			"pdUpdateEnd"	TEXT,
-			"payDate"	TEXT,
-			"email"	TEXT,
-			"sended"	INTEGER,
-			"dateISO"	REAL
-		""")
-		conn.commit()
-		cursor.close()
 
 	# connect buttons (gui) and code
 	# add button
@@ -393,7 +372,7 @@ class SendMail:
 	# get month name to subject of mail
 	def month_name():
 		#set russian locale
-		locale.setlocale(locale.LC_TIME, "ru_RU")
+		locale.setlocale(locale.LC_TIME, "")
 		current_month = (date.strftime((datetime.today()), "%B").lower())
 		return(current_month)
 
@@ -466,7 +445,6 @@ class TxtFile:
 					#SendMail.sql_select_to_list(num, 'email')) + '; Примечание: ' + str(
 					#SendMail.sql_select_to_list(num, 'note'))
 					+ '\n')
-
 				mail_file.write(message)
 			mail_file.close()
 	make_txt_file(SendMail.countRows())
@@ -474,3 +452,4 @@ if __name__ == '__main__':
 	Application()
 	Gtk.main()
 	SendMail()
+	
