@@ -104,7 +104,7 @@ class Application(object):
 		if self.date_chose.get_active() == 1 and self.chose.get_active() == 3 and value_date < date(2015, 1, 1):
 			remind_date = value_date + relativedelta(years=4)
 			remind_date2 = value_date + relativedelta(years=5)
-		if self.date.chose.get_active() == 1 and  self.chose.get_active() == 3:
+		if self.date_chose.get_active() == 1 and  self.chose.get_active() == 3:
 			remind_date = remind_date + relativedelta(days=1)
 		# calc year
 		remind_date_str = (date.strftime(remind_date, "%Y"))
