@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright 2021 Andrey Golubev
-import locale
 import sys
 import configparser
 import gi
