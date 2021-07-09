@@ -334,7 +334,7 @@ class SendMail:
 	def sql_select_to_list(num, select_table):
 		cursor = conn.cursor()
 		list_n = []
-		cursor.execute("SELECT %s FROM patents WHERE sended < 6 AND nextRemind < date('now') ORDER BY nextRemind" % (select_table,))
+		cursor.execute("SELECT %s FROM patents WHERE nextRemind < date('now') ORDER BY nextRemind" % (select_table,))
 		list_sql = cursor.fetchall()
 		for row in list_sql:
 				list_n.append(row[0])
@@ -381,39 +381,39 @@ class SendMail:
 			MessageDialogWindow.error_window(error_title, str('Файл settings.ini не найден или заполнен некорректно'))
 
 	# sen email method
-	def send_email(month, message_from, password, message_to):
-		# Subject of the mail
-		subject = "Напоминание за %s" % (month)
-		msg = MIMEMultipart()
-		msg['Subject'] = subject
-		# get info from read_config
-		msg['From'] = str(message_from)
-		password = str(password)
-		msg['To'] = str(message_to)
-		# read info from txt file and pass it to message
-		mail_file = open("C:\\ProgramData\\PatentHelper\\LastMail.txt")
-		msg.attach(MIMEText(mail_file.read(), 'plain'))
-		# try to login gmail and sending the mail
-		try:
-			server = smtplib.SMTP('smtp.gmail.com: 587')
-			server.starttls()
-			server.login(msg['From'], password)
-			server.sendmail(msg['From'], msg['To'], msg.as_string())
-			server.quit()
-			mail_file.close()
-			# make a mark about sended objects
-			cursor = conn.cursor()
-			cursor.execute("UPDATE patents SET sended = sended + 1 WHERE sended < 6 AND nextRemind < date('now')")
-			cursor.execute("UPDATE patents SET nextRemind = DATE(('now'), '+1 day') WHERE nextRemind < date('now')")
-			cursor.execute("UPDATE patents set nextRemind = CASE WHEN nextRemind is NULL THEN dateISO ELSE nextRemind END")
-			conn.commit()
-			cursor.close()
-		except Exception as error_text:
-			# if somethong goes wrong, type info about error
-			error_title = 'Email error'
-			MessageDialogWindow.error_window(error_title, str(error_text))
+	def send_email(month, message_from, password, message_to, count_rows):
+		if count_rows > 0:
+			# Subject of the mail
+			subject = "Напоминание за %s" % (month)
+			msg = MIMEMultipart()
+			msg['Subject'] = subject
+			# get info from read_config
+			msg['From'] = str(message_from)
+			password = str(password)
+			msg['To'] = str(message_to)
+			# read info from txt file and pass it to message
+			mail_file = open("C:\\ProgramData\\PatentHelper\\LastMail.txt")
+			msg.attach(MIMEText(mail_file.read(), 'plain'))
+			# try to login gmail and sending the mail
+			try:
+				server = smtplib.SMTP('smtp.gmail.com: 587')
+				server.starttls()
+				server.login(msg['From'], password)
+				server.sendmail(msg['From'], msg['To'], msg.as_string())
+				server.quit()
+				mail_file.close()
+				# make a mark about sended objects
+				cursor = conn.cursor()
+				cursor.execute("UPDATE patents SET nextRemind = DATE(('now'), '+1 day') WHERE nextRemind < date('now')")
+				cursor.execute("UPDATE patents set nextRemind = CASE WHEN nextRemind is NULL THEN dateISO ELSE nextRemind END")
+				conn.commit()
+				cursor.close()
+			except Exception as error_text:
+				# if somethong goes wrong, type info about error
+				error_title = 'Email error'
+				MessageDialogWindow.error_window(error_title, str(error_text))
 
-	send_email(month_name(), read_config()[0], read_config()[1], read_config()[2])
+	send_email(month_name(), read_config()[0], read_config()[1], read_config()[2], countRows())
 
 # make txt file with info about subjects
 class TxtFile:
