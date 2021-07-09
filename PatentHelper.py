@@ -341,24 +341,18 @@ class SendMail:
 		cursor.close()
 		return(list_n[num])
 
-	# change next_remind date
-	def next_remind():
-		cursor = conn.cursor()
-
-		conn.commit()
-		cursor.close()
 
 	# get number of rows
 	def countRows():
 			cursor = conn.cursor()
-			cursor.execute("SELECT COUNT(*) numCert FROM patents WHERE sended < 6 AND nextRemind < date('now') ORDER BY nextRemind")
+			cursor.execute("SELECT COUNT(*) numCert FROM patents WHERE nextRemind < date('now') ORDER BY nextRemind")
 			len_list = cursor.fetchone()
 			cursor.close()
 			return len_list[0]
 
 	# get month name to subject of mail
 	def month_name():
-		#set russian locale
+		#set system locale
 		locale.setlocale(locale.LC_TIME, "")
 		current_month = (date.strftime((datetime.today()), "%B").lower())
 		return(current_month)
@@ -374,14 +368,16 @@ class SendMail:
 			password = config["Mail"]["password"]
 			# to
 			message_to = config["Mail"]["to"]
-			return(message_from, password, message_to)
+			# notification timer
+			notification_days = config["Mail"]["days"]
+			return(message_from, password, message_to, notification_days)
 		except:
 			# if somethong goes wrong, type info about error
 			error_title = 'Config error'
 			MessageDialogWindow.error_window(error_title, str('Файл settings.ini не найден или заполнен некорректно'))
 
 	# sen email method
-	def send_email(month, message_from, password, message_to, count_rows):
+	def send_email(month, message_from, password, message_to, notification_days, count_rows):
 		if count_rows > 0:
 			# Subject of the mail
 			subject = "Напоминание за %s" % (month)
@@ -413,7 +409,7 @@ class SendMail:
 				error_title = 'Email error'
 				MessageDialogWindow.error_window(error_title, str(error_text))
 
-	send_email(month_name(), read_config()[0], read_config()[1], read_config()[2], countRows())
+	send_email(month_name(), read_config()[0], read_config()[1], read_config()[2], read_config()[3], countRows())
 
 # make txt file with info about subjects
 class TxtFile:
