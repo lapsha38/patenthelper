@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.1 -->
+<!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
   <object class="GtkListStore" id="ListStore">
@@ -30,23 +30,20 @@
   </object>
   <object class="GtkWindow" id="main">
     <property name="name">MainWindow</property>
-    <property name="can_focus">False</property>
+    <property name="can-focus">False</property>
     <property name="title" translatable="yes">PatentHelper</property>
     <property name="icon">icon.png</property>
-    <property name="startup_id">PatentHelper</property>
+    <property name="startup-id">PatentHelper</property>
     <signal name="destroy-event" handler="onDestroy" swapped="no"/>
-    <child type="titlebar">
-      <placeholder/>
-    </child>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="label" translatable="yes">Тип объекта ИС</property>
           </object>
           <packing>
@@ -58,9 +55,9 @@
         <child>
           <object class="GtkComboBoxText" id="type_chose">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="active">0</property>
-            <property name="active_id">tm</property>
+            <property name="active-id">tm</property>
             <items>
               <item id="tm" translatable="yes">Товарный знак</item>
               <item id="inv" translatable="yes">Изобретение</item>
@@ -77,7 +74,7 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="label" translatable="yes">Номер свидетельства/патента</property>
           </object>
           <packing>
@@ -89,9 +86,9 @@
         <child>
           <object class="GtkEntry" id="certNum">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="placeholder_text" translatable="yes">Введите номер свидетельства или патента</property>
-            <property name="input_purpose">digits</property>
+            <property name="can-focus">True</property>
+            <property name="placeholder-text" translatable="yes">Введите номер свидетельства или патента</property>
+            <property name="input-purpose">digits</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -102,7 +99,7 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="label" translatable="yes">Наименование</property>
           </object>
           <packing>
@@ -114,8 +111,8 @@
         <child>
           <object class="GtkEntry" id="name">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="placeholder_text" translatable="yes">Введите название из/пм и тд</property>
+            <property name="can-focus">True</property>
+            <property name="placeholder-text" translatable="yes">Введите название из/пм и тд</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -126,7 +123,7 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="label" translatable="yes">Правообладатель</property>
           </object>
           <packing>
@@ -138,8 +135,8 @@
         <child>
           <object class="GtkEntry" id="rightHolder">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="placeholder_text" translatable="yes">Укажите правообладателя</property>
+            <property name="can-focus">True</property>
+            <property name="placeholder-text" translatable="yes">Укажите правообладателя</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -150,7 +147,7 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="label" translatable="yes">Email контактного лица</property>
           </object>
           <packing>
@@ -162,8 +159,8 @@
         <child>
           <object class="GtkEntry" id="email">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="placeholder_text" translatable="yes">Необязательно для заполнения</property>
+            <property name="can-focus">True</property>
+            <property name="placeholder-text" translatable="yes">Необязательно для заполнения</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -174,7 +171,7 @@
         <child>
           <object class="GtkComboBoxText" id="date_chose">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="active">0</property>
             <items>
               <item id="1" translatable="yes">Дата приоритета</item>
@@ -190,10 +187,10 @@
         <child>
           <object class="GtkEntry" id="date">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="max_length">10</property>
-            <property name="caps_lock_warning">False</property>
-            <property name="placeholder_text" translatable="yes">Введите дату  в формате 01.12.2019</property>
+            <property name="can-focus">True</property>
+            <property name="max-length">10</property>
+            <property name="caps-lock-warning">False</property>
+            <property name="placeholder-text" translatable="yes">Введите дату  в формате 01.12.2019</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -204,7 +201,7 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="label" translatable="yes">Примечание</property>
           </object>
           <packing>
@@ -216,9 +213,9 @@
         <child>
           <object class="GtkEntry" id="note">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="placeholder_text" translatable="yes">Введите примечание</property>
-            <property name="input_purpose">digits</property>
+            <property name="can-focus">True</property>
+            <property name="placeholder-text" translatable="yes">Введите примечание</property>
+            <property name="input-purpose">digits</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -230,10 +227,10 @@
           <object class="GtkButton" id="add">
             <property name="label">gtk-add</property>
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="use_stock">True</property>
-            <property name="always_show_image">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="use-stock">True</property>
+            <property name="always-show-image">True</property>
             <signal name="clicked" handler="click_add" swapped="no"/>
           </object>
           <packing>
@@ -245,7 +242,7 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="label" translatable="yes">В таблице ниже представлена информация о товарных знаках</property>
           </object>
           <packing>
@@ -257,22 +254,22 @@
         <child>
           <object class="GtkScrolledWindow">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="shadow_type">in</property>
-            <property name="min_content_width">800</property>
-            <property name="min_content_height">300</property>
+            <property name="can-focus">True</property>
+            <property name="shadow-type">in</property>
+            <property name="min-content-width">800</property>
+            <property name="min-content-height">300</property>
             <child>
               <object class="GtkTreeView" id="TreeView">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
+                <property name="can-focus">True</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
-                <property name="hscroll_policy">natural</property>
+                <property name="hscroll-policy">natural</property>
                 <property name="model">ListStore</property>
-                <property name="search_column">4</property>
-                <property name="show_expanders">False</property>
-                <property name="level_indentation">1</property>
-                <property name="enable_grid_lines">both</property>
+                <property name="search-column">4</property>
+                <property name="show-expanders">False</property>
+                <property name="level-indentation">1</property>
+                <property name="enable-grid-lines">both</property>
                 <signal name="cursor-changed" handler="on_clicked" swapped="no"/>
                 <child internal-child="selection">
                   <object class="GtkTreeSelection"/>
@@ -280,8 +277,8 @@
                 <child>
                   <object class="GtkTreeViewColumn" id="id">
                     <property name="resizable">True</property>
-                    <property name="min_width">25</property>
-                    <property name="max_width">50</property>
+                    <property name="min-width">25</property>
+                    <property name="max-width">50</property>
                     <property name="title" translatable="yes">№</property>
                     <property name="clickable">True</property>
                     <signal name="clicked" handler="on_search" swapped="no"/>
@@ -296,12 +293,12 @@
                 <child>
                   <object class="GtkTreeViewColumn" id="tableType">
                     <property name="resizable">True</property>
-                    <property name="fixed_width">50</property>
-                    <property name="min_width">20</property>
+                    <property name="fixed-width">50</property>
+                    <property name="min-width">20</property>
                     <property name="title" translatable="yes">Тип</property>
                     <property name="expand">True</property>
                     <property name="clickable">True</property>
-                    <signal name="clicked" handler="on_search1" swapped="no"/>
+                    <signal name="clicked" handler="on_search" swapped="no"/>
                     <child>
                       <object class="GtkCellRendererText"/>
                       <attributes>
@@ -313,11 +310,11 @@
                 <child>
                   <object class="GtkTreeViewColumn" id="tableNum">
                     <property name="resizable">True</property>
-                    <property name="min_width">20</property>
+                    <property name="min-width">20</property>
                     <property name="title" translatable="yes">Номер</property>
                     <property name="expand">True</property>
                     <property name="clickable">True</property>
-                    <signal name="clicked" handler="on_search2" swapped="no"/>
+                    <signal name="clicked" handler="on_search" swapped="no"/>
                     <child>
                       <object class="GtkCellRendererText"/>
                       <attributes>
@@ -329,12 +326,12 @@
                 <child>
                   <object class="GtkTreeViewColumn" id="tableName">
                     <property name="resizable">True</property>
-                    <property name="fixed_width">90</property>
-                    <property name="min_width">20</property>
+                    <property name="fixed-width">90</property>
+                    <property name="min-width">20</property>
                     <property name="title" translatable="yes">Название</property>
                     <property name="expand">True</property>
                     <property name="clickable">True</property>
-                    <signal name="clicked" handler="on_search3" swapped="no"/>
+                    <signal name="clicked" handler="on_search" swapped="no"/>
                     <child>
                       <object class="GtkCellRendererText"/>
                       <attributes>
@@ -346,12 +343,12 @@
                 <child>
                   <object class="GtkTreeViewColumn" id="tableHolder">
                     <property name="resizable">True</property>
-                    <property name="fixed_width">90</property>
-                    <property name="min_width">20</property>
+                    <property name="fixed-width">90</property>
+                    <property name="min-width">20</property>
                     <property name="title" translatable="yes">Правообладатель</property>
                     <property name="expand">True</property>
                     <property name="clickable">True</property>
-                    <signal name="clicked" handler="on_search4" swapped="no"/>
+                    <signal name="clicked" handler="on_search" swapped="no"/>
                     <child>
                       <object class="GtkCellRendererText"/>
                       <attributes>
@@ -363,12 +360,12 @@
                 <child>
                   <object class="GtkTreeViewColumn" id="tablePd">
                     <property name="resizable">True</property>
-                    <property name="fixed_width">90</property>
-                    <property name="min_width">20</property>
+                    <property name="fixed-width">90</property>
+                    <property name="min-width">20</property>
                     <property name="title" translatable="yes">Дата приоритета</property>
                     <property name="expand">True</property>
                     <property name="clickable">True</property>
-                    <signal name="clicked" handler="on_search5" swapped="no"/>
+                    <signal name="clicked" handler="on_search" swapped="no"/>
                     <child>
                       <object class="GtkCellRendererText"/>
                       <attributes>
@@ -380,12 +377,12 @@
                 <child>
                   <object class="GtkTreeViewColumn" id="tableStart">
                     <property name="resizable">True</property>
-                    <property name="fixed_width">90</property>
-                    <property name="min_width">20</property>
+                    <property name="fixed-width">90</property>
+                    <property name="min-width">20</property>
                     <property name="title" translatable="yes">Оплатить с</property>
                     <property name="expand">True</property>
                     <property name="clickable">True</property>
-                    <signal name="clicked" handler="on_search6" swapped="no"/>
+                    <signal name="clicked" handler="on_search" swapped="no"/>
                     <child>
                       <object class="GtkCellRendererText"/>
                       <attributes>
@@ -397,12 +394,12 @@
                 <child>
                   <object class="GtkTreeViewColumn" id="tableEnd">
                     <property name="resizable">True</property>
-                    <property name="fixed_width">90</property>
-                    <property name="min_width">20</property>
+                    <property name="fixed-width">90</property>
+                    <property name="min-width">20</property>
                     <property name="title" translatable="yes">Оплатить по</property>
                     <property name="expand">True</property>
                     <property name="clickable">True</property>
-                    <signal name="clicked" handler="on_search7" swapped="no"/>
+                    <signal name="clicked" handler="on_search" swapped="no"/>
                     <child>
                       <object class="GtkCellRendererText"/>
                       <attributes>
@@ -414,12 +411,12 @@
                 <child>
                   <object class="GtkTreeViewColumn" id="tablePayDate">
                     <property name="resizable">True</property>
-                    <property name="fixed_width">90</property>
-                    <property name="min_width">20</property>
+                    <property name="fixed-width">90</property>
+                    <property name="min-width">20</property>
                     <property name="title" translatable="yes">Дата оплаты</property>
                     <property name="expand">True</property>
                     <property name="clickable">True</property>
-                    <signal name="clicked" handler="on_search8" swapped="no"/>
+                    <signal name="clicked" handler="on_search" swapped="no"/>
                     <child>
                       <object class="GtkCellRendererText"/>
                       <attributes>
@@ -431,12 +428,12 @@
                 <child>
                   <object class="GtkTreeViewColumn" id="tableEmail">
                     <property name="resizable">True</property>
-                    <property name="fixed_width">90</property>
-                    <property name="min_width">20</property>
+                    <property name="fixed-width">90</property>
+                    <property name="min-width">20</property>
                     <property name="title" translatable="yes">email</property>
                     <property name="expand">True</property>
                     <property name="clickable">True</property>
-                    <signal name="clicked" handler="on_search9" swapped="no"/>
+                    <signal name="clicked" handler="on_search" swapped="no"/>
                     <child>
                       <object class="GtkCellRendererText"/>
                       <attributes>
@@ -448,12 +445,12 @@
                 <child>
                   <object class="GtkTreeViewColumn" id="tableNote">
                     <property name="resizable">True</property>
-                    <property name="fixed_width">180</property>
-                    <property name="min_width">20</property>
+                    <property name="fixed-width">180</property>
+                    <property name="min-width">20</property>
                     <property name="title" translatable="yes">Примечание</property>
                     <property name="expand">True</property>
                     <property name="clickable">True</property>
-                    <signal name="clicked" handler="on_search10" swapped="no"/>
+                    <signal name="clicked" handler="on_search" swapped="no"/>
                     <child>
                       <object class="GtkCellRendererText"/>
                       <attributes>
@@ -474,17 +471,17 @@
         <child>
           <object class="GtkButtonBox">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="layout_style">expand</property>
+            <property name="can-focus">False</property>
+            <property name="layout-style">expand</property>
             <child>
-              <object class="GtkButton" id="update_button">
-                <property name="label">gtk-save</property>
+              <object class="GtkButton" id="delete_button">
+                <property name="label">gtk-delete</property>
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
-                <property name="always_show_image">True</property>
-                <signal name="clicked" handler="click_edit" swapped="no"/>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="use-stock">True</property>
+                <property name="always-show-image">True</property>
+                <signal name="clicked" handler="click_del" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -493,14 +490,14 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="delete_button">
-                <property name="label">gtk-delete</property>
+              <object class="GtkButton" id="update_button">
+                <property name="label">gtk-save</property>
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
-                <property name="always_show_image">True</property>
-                <signal name="clicked" handler="click_del" swapped="no"/>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="use-stock">True</property>
+                <property name="always-show-image">True</property>
+                <signal name="clicked" handler="click_edit" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
