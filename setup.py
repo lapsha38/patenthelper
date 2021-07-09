@@ -66,6 +66,7 @@ exe1 = Executable(
     script = "PatentHelper.py",
     targetName = "PatentHelper.exe",
     base = "Win32GUI",
+    icon="icon.ico"
 )
 setup(
     name = "PatentHelper",
