@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright 2021 Andrey Golubev
+import locale
 import sys
 import configparser
 import gi
@@ -23,7 +24,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 # connect sqlite
-conn = sqlite3.connect('database.db')
+conn = sqlite3.connect('C:\\ProgramData\\PatentHelper\\database.db')
 cursor = conn.cursor()
 # value for sort tables
 count_search = 0
@@ -104,7 +105,7 @@ class Application(object):
 		if self.date_chose.get_active() == 1 and self.chose.get_active() == 3 and value_date < date(2015, 1, 1):
 			remind_date = value_date + relativedelta(years=4)
 			remind_date2 = value_date + relativedelta(years=5)
-		if self.date_chose.get_active() == 1 and self.chose.get_active() == 3:
+		if self.date_chose.get_active() == 1 and  self.chose.get_active() == 3:
 			remind_date = remind_date + relativedelta(days=1)
 		# calc year
 		remind_date_str = (date.strftime(remind_date, "%Y"))
@@ -379,7 +380,7 @@ class SendMail:
 		# read configs from settings.ini
 		config = configparser.ConfigParser()
 		try:
-			config.read("settings.ini")
+			config.read("C:\\ProgramData\\PatentHelper\\settings.ini")
 			# from
 			message_from = config["Mail"]["from"]
 			# pass
@@ -403,7 +404,7 @@ class SendMail:
 		password = password
 		msg['To'] = message_to
 		# read info from txt file and pass it to message
-		mail_file = open("LastMail.txt")
+		mail_file = open("C:\\ProgramData\\PatentHelper\\LastMail.txt")
 		msg.attach(MIMEText(mail_file.read(), 'plain'))
 		# try to login gmail and sending the mail
 		try:
@@ -428,7 +429,7 @@ class TxtFile:
 		# if list is not null, make some text file
 		if len_list != 0:
 			# fill list for remind
-			mail_file = open("LastMail.txt", "w")
+			mail_file = open("C:\\ProgramData\\PatentHelper\\LastMail.txt", "w")
 			for num in range(len_list):
 				message = (str(num + 1) + '. ' + str(
 					SendMail.sql_select_to_list(num, 'type')) + '; Наименование: ' + str(
