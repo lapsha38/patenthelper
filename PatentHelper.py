@@ -400,7 +400,7 @@ class SendMail:
 				mail_file.close()
 				# make a mark about sended objects
 				cursor = conn.cursor()
-				cursor.execute("UPDATE patents SET nextRemind = DATE(('now'), '+1 day') WHERE nextRemind < date('now')")
+				cursor.execute("UPDATE patents SET nextRemind = DATE(('now'), '+%s day') WHERE nextRemind < date('now')" % (notification_days,))
 				cursor.execute("UPDATE patents set nextRemind = CASE WHEN nextRemind is NULL THEN dateISO ELSE nextRemind END")
 				conn.commit()
 				cursor.close()
