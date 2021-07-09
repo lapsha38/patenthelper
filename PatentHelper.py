@@ -344,11 +344,7 @@ class SendMail:
 	# change next_remind date
 	def next_remind():
 		cursor = conn.cursor()
-		cursor.execute("""
-			UPDATE patents set nextRemind = CASE
-			WHEN nextRemind is NULL THEN dateISO
-			ELSE nextRemind
-			END """)
+
 		conn.commit()
 		cursor.close()
 
@@ -359,16 +355,7 @@ class SendMail:
 			len_list = cursor.fetchone()
 			cursor.close()
 			return len_list[0]
-	# mark sended items
-	def setSended():
-		cursor = conn.cursor()
-		cursor.execute("UPDATE patents SET sended = sended + 1 WHERE sended < 6 AND nextRemind < date('now')")
-		cursor.execute(
-				"UPDATE patents SET nextRemind = DATE(('now'), '+3 month') WHERE sended < 6 AND nextRemind < date('now')")
-		conn.commit()
-		cursor.close()
 
-	next_remind()
 	# get month name to subject of mail
 	def month_name():
 		#set russian locale
@@ -400,9 +387,9 @@ class SendMail:
 		msg = MIMEMultipart()
 		msg['Subject'] = subject
 		# get info from read_config
-		msg['From'] = message_from
-		password = password
-		msg['To'] = message_to
+		msg['From'] = str(message_from)
+		password = str(password)
+		msg['To'] = str(message_to)
 		# read info from txt file and pass it to message
 		mail_file = open("C:\\ProgramData\\PatentHelper\\LastMail.txt")
 		msg.attach(MIMEText(mail_file.read(), 'plain'))
@@ -415,7 +402,12 @@ class SendMail:
 			server.quit()
 			mail_file.close()
 			# make a mark about sended objects
-			SelectTable.setSended()
+			cursor = conn.cursor()
+			cursor.execute("UPDATE patents SET sended = sended + 1 WHERE sended < 6 AND nextRemind < date('now')")
+			cursor.execute("UPDATE patents SET nextRemind = DATE(('now'), '+1 day') WHERE nextRemind < date('now')")
+			cursor.execute("UPDATE patents set nextRemind = CASE WHEN nextRemind is NULL THEN dateISO ELSE nextRemind END")
+			conn.commit()
+			cursor.close()
 		except Exception as error_text:
 			# if somethong goes wrong, type info about error
 			error_title = 'Email error'
