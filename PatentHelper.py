@@ -377,7 +377,7 @@ class SendMail:
 			MessageDialogWindow.error_window(error_title, str('Файл settings.ini не найден или заполнен некорректно'))
 
 	# sen email method
-	def send_email(month, message_from, password, message_to, notification_days, count_rows):
+	def send_email(count_rows, month, message_from, password, message_to, notification_days):
 		if count_rows > 0:
 			# Subject of the mail
 			subject = "Напоминание за %s" % (month)
@@ -397,19 +397,19 @@ class SendMail:
 				server.login(msg['From'], password)
 				server.sendmail(msg['From'], msg['To'], msg.as_string())
 				server.quit()
-				mail_file.close()
 				# make a mark about sended objects
 				cursor = conn.cursor()
-				cursor.execute("UPDATE patents SET nextRemind = DATE(('now'), '+%s day') WHERE nextRemind < date('now')" % (notification_days,))
 				cursor.execute("UPDATE patents set nextRemind = CASE WHEN nextRemind is NULL THEN dateISO ELSE nextRemind END")
+				cursor.execute("UPDATE patents SET nextRemind = DATE(('now'), '+%s day') WHERE nextRemind < date('now')" % (notification_days,))
 				conn.commit()
 				cursor.close()
 			except Exception as error_text:
 				# if somethong goes wrong, type info about error
 				error_title = 'Email error'
 				MessageDialogWindow.error_window(error_title, str(error_text))
+			mail_file.close()
 
-	send_email(month_name(), read_config()[0], read_config()[1], read_config()[2], read_config()[3], countRows())
+	send_email(countRows(), month_name(), read_config()[0], read_config()[1], read_config()[2], read_config()[3])
 
 # make txt file with info about subjects
 class TxtFile:
@@ -440,4 +440,3 @@ if __name__ == '__main__':
 	Application()
 	Gtk.main()
 	SendMail()
-	
