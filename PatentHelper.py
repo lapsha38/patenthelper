@@ -29,6 +29,7 @@ cursor = conn.cursor()
 # value for sort tables
 count_search = 0
 
+# gui window
 class Application(object):
 	def __init__(self):
 		# main defs
@@ -312,23 +313,17 @@ class Application(object):
 		Gtk.main_quit()
 		conn.close()
 
-       
-class MessageDialogWindow(Gtk.Window):
-	# create error window (if something goes wrong)
-	def error_window(error_title, error_text):
-		Gtk.Window(title="Error!")
-		dialog = Gtk.MessageDialog(
-			flags=0,
-			message_type=Gtk.MessageType.INFO,
-			buttons=Gtk.ButtonsType.OK,
-			text=error_title,
-		)
-		dialog.format_secondary_text(
-			error_text
-		)
-		dialog.run()
-		dialog.destroy()
+# count rows to remind
+class CountRows:
+	# get number of rows
+	def count_rows():
+		cursor = conn.cursor()
+		cursor.execute("SELECT COUNT(*) numCert FROM patents WHERE nextRemind < date('now') ORDER BY nextRemind")
+		len_list = cursor.fetchone()
+		cursor.close()
+		return len_list[0]
 
+# send email to user
 class SendMail:
 	# select table from db
 	def sql_select_to_list(num, select_table):
@@ -340,15 +335,6 @@ class SendMail:
 				list_n.append(row[0])
 		cursor.close()
 		return(list_n[num])
-
-
-	# get number of rows
-	def countRows():
-			cursor = conn.cursor()
-			cursor.execute("SELECT COUNT(*) numCert FROM patents WHERE nextRemind < date('now') ORDER BY nextRemind")
-			len_list = cursor.fetchone()
-			cursor.close()
-			return len_list[0]
 
 	# get month name to subject of mail
 	def month_name():
@@ -377,8 +363,9 @@ class SendMail:
 			MessageDialogWindow.error_window(error_title, str('Файл settings.ini не найден или заполнен некорректно'))
 
 	# sen email method
-	def send_email(count_rows, month, message_from, password, message_to, notification_days):
-		if count_rows > 0:
+	def send_email(month, message_from, password, message_to, notification_days):
+		len_list = CountRows.count_rows()
+		if len_list > 0:
 			# Subject of the mail
 			subject = "Напоминание за %s" % (month)
 			msg = MIMEMultipart()
@@ -390,6 +377,7 @@ class SendMail:
 			# read info from txt file and pass it to message
 			mail_file = open("C:\\ProgramData\\PatentHelper\\LastMail.txt")
 			msg.attach(MIMEText(mail_file.read(), 'plain'))
+			sended = 0
 			# try to login gmail and sending the mail
 			try:
 				server = smtplib.SMTP('smtp.gmail.com: 587')
@@ -397,19 +385,21 @@ class SendMail:
 				server.login(msg['From'], password)
 				server.sendmail(msg['From'], msg['To'], msg.as_string())
 				server.quit()
-				# make a mark about sended objects
-				cursor = conn.cursor()
-				cursor.execute("UPDATE patents set nextRemind = CASE WHEN nextRemind is NULL THEN dateISO ELSE nextRemind END")
-				cursor.execute("UPDATE patents SET nextRemind = DATE(('now'), '+%s day') WHERE nextRemind < date('now')" % (notification_days,))
-				conn.commit()
-				cursor.close()
+				# if email was sended, make a mark about it
+				sended = 1
 			except Exception as error_text:
 				# if somethong goes wrong, type info about error
 				error_title = 'Email error'
 				MessageDialogWindow.error_window(error_title, str(error_text))
 			mail_file.close()
-
-	send_email(countRows(), month_name(), read_config()[0], read_config()[1], read_config()[2], read_config()[3])
+			# if email was successfully sended, change dates for next remind
+			if sended == 1:
+				#make a mark about sended objects
+				cursor = conn.cursor()
+				cursor.execute("UPDATE patents set nextRemind = CASE WHEN nextRemind is NULL THEN dateISO ELSE nextRemind END")
+				cursor.execute("UPDATE patents SET nextRemind = DATE(('now'), '+%s day') WHERE nextRemind < date('now')" % (notification_days,))
+				conn.commit()
+				cursor.close()
 
 # make txt file with info about subjects
 class TxtFile:
@@ -435,8 +425,15 @@ class TxtFile:
 					+ '\n')
 				mail_file.write(message)
 			mail_file.close()
-	make_txt_file(SendMail.countRows())
+
+	make_txt_file(CountRows.count_rows())
+
+
 if __name__ == '__main__':
+	# gen txt file
+	TxtFile()
+	# send email with txt file
+	SendMail.send_email(SendMail.month_name(), SendMail.read_config()[0], SendMail.read_config()[1], SendMail.read_config()[2], SendMail.read_config()[3])
+	# run gui
 	Application()
 	Gtk.main()
-	SendMail()
