@@ -313,6 +313,22 @@ class Application(object):
 		Gtk.main_quit()
 		conn.close()
 
+class MessageDialogWindow(Gtk.Window):
+	# create error window (if something goes wrong)
+	def error_window(error_title, error_text):
+		Gtk.Window(title="Error!")
+		dialog = Gtk.MessageDialog(
+			flags=0,
+			message_type=Gtk.MessageType.INFO,
+			buttons=Gtk.ButtonsType.OK,
+			text=error_title,
+		)
+		dialog.format_secondary_text(
+			error_text
+		)
+		dialog.run()
+		dialog.destroy()
+
 # count rows to remind
 class CountRows:
 	# get number of rows
