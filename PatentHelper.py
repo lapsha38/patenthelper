@@ -202,10 +202,10 @@ class Application(object):
 			""".format(value_chose, value_number, value_name, value_holder, calc_time[0],
 					   calc_time[1], value_email, date_start_str_iso, date_end_str_iso, value_note, i))
 		if self.date_chose.get_active() == 0:
-			cursor.execute("""UPDATE patents SET priorityDate = '{0}', sended = 0, priorityDate_ISO = '{1}' WHERE id = '{2}'
+			cursor.execute("""UPDATE patents SET priorityDate = '{0}', priorityDate_ISO = '{1}' WHERE id = '{2}'
 			""".format(self.date.get_text(), (datetime.strptime((self.date.get_text()), ("%d.%m.%Y")).date()), i))
 		if self.date_chose.get_active() == 1:
-			cursor.execute("""UPDATE patents SET payDate = '{0}', sended = 0, payDate_ISO = '{1}' WHERE id = '{2}'
+			cursor.execute("""UPDATE patents SET payDate = '{0}', payDate_ISO = '{1}' WHERE id = '{2}'
 			""".format(self.date.get_text(), (datetime.strptime((self.date.get_text()), ("%d.%m.%Y")).date()), i))
 		conn.commit()
 		cursor.close()
@@ -313,6 +313,22 @@ class Application(object):
 		Gtk.main_quit()
 		conn.close()
 
+class MessageDialogWindow(Gtk.Window):
+	# create error window (if something goes wrong)
+	def error_window(error_title, error_text):
+		Gtk.Window(title="Error!")
+		dialog = Gtk.MessageDialog(
+			flags=0,
+			message_type=Gtk.MessageType.INFO,
+			buttons=Gtk.ButtonsType.OK,
+			text=error_title,
+		)
+		dialog.format_secondary_text(
+			error_text
+		)
+		dialog.run()
+		dialog.destroy()
+
 # count rows to remind
 class CountRows:
 	# get number of rows
@@ -417,11 +433,11 @@ class TxtFile:
 					SendMail.sql_select_to_list(num, 'priorityDate')) + '; Дата последнего платежа: ' + str(
 					SendMail.sql_select_to_list(num, 'payDate')) + '; Оплатить с: ' + str(
 					SendMail.sql_select_to_list(num, 'pdUpdateStart')) + '; Оплатить по: ' + str(
-					SendMail.sql_select_to_list(num, 'pdUpdateEnd')) 
+					SendMail.sql_select_to_list(num, 'pdUpdateEnd'))  + '; Примечание: ' + str(
+					SendMail.sql_select_to_list(num, 'note'))
 					## disabled now
 					# + '; Отправить на почту: ' + str(
-					#SendMail.sql_select_to_list(num, 'email')) + '; Примечание: ' + str(
-					#SendMail.sql_select_to_list(num, 'note'))
+					#SendMail.sql_select_to_list(num, 'email')) + ';
 					+ '\n')
 				mail_file.write(message)
 			mail_file.close()
