@@ -1,5 +1,5 @@
 ## I made this project for my mom, but anyone can use it for free
-This is python script with sqlite database, you can insert/delete/update data from gui, scrtipt will calculate time and make some reminds for user  
+This is python script with sqlite database, you can insert/delete/update data from gui (GTK), scrtipt will calculate time and make some reminds for user  
   
 ### Change setting.ini before start PatentHepler.exe
 
